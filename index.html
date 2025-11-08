@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Gift For You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Chewy', cursive;
+            background: url('blue.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #4a6fa5;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* Snoopy floating icons */
+        .snoopy-bg {
+            position: fixed;
+            z-index: -1;
+            opacity: 0.7;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .snoopy-1 {
+            width: 80px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .snoopy-2 {
+            width: 100px;
+            top: 70%;
+            left: 85%;
+            animation-delay: 2s;
+        }
+
+        .snoopy-3 {
+            width: 60px;
+            top: 40%;
+            left: 90%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: transform 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 3px solid #ffb6c1;
+        }
+
+        .notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .notification i {
+            color: #ffb6c1;
+            font-size: 1.5rem;
+        }
+
+        .notification p {
+            font-size: 1.2rem;
+            color: #4a6fa5;
+        }
+
+        /* Password Screen */
+        .password-screen {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            border: 5px dashed #ffb6c1;
+            position: relative;
+            z-index: 10;
+        }
+
+        .password-screen h1 {
+            color: #4a6fa5;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+            text-shadow: 2px 2px 0 #ffb6c1;
+        }
+
+        .password-screen p {
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            color: #6d8cc0;
+        }
+
+        .password-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .password-input {
+            padding: 15px;
+            border: 3px solid #a8d8ea;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-family: 'Chewy', cursive;
+            text-align: center;
+            width: 100%;
+            color: #4a6fa5;
+            background-color: #f0f9ff;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #ffb6c1;
+            box-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
+        }
+
+        .submit-btn {
+            background-color: #ffb6c1;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-family: 'Chewy', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 0 #e0a4af;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 #e0a4af;
+        }
+
+        .submit-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 #e0a4af;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 1rem;
+            display: none;
+        }
+
+        /* Puzzle Screen */
+        .puzzle-screen {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header h1 {
+            color: #4a6fa5;
+            font-size: 2rem;
+            text-shadow: 2px 2px 0 #ffb6c1;
+        }
+
+        .header img {
+            width: 50px;
+            height: auto;
+        }
+
+        .puzzle-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .puzzle-board {
+            width: 100%;
+            height: 400px;
+            background-color: #fff0f5;
+            border-radius: 15px;
+            border: 3px dashed #ffb7d5;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            max-width: 400px;
+        }
+
+        .puzzle-piece {
+            position: absolute;
+            background-size: 300% 300%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s;
+            z-index: 1;
+            border: 2px solid #a8d8ea;
+        }
+
+        .puzzle-piece:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            z-index: 2;
+        }
+
+        .puzzle-piece.dragging {
+            cursor: grabbing;
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            z-index: 3;
+            border-color: #ffb6c1;
+        }
+
+        .puzzle-piece.correct {
+            cursor: default;
+            box-shadow: 0 0 0 3px #a78bfa;
+            animation: gentlePulse 2s infinite;
+        }
+
+        @keyframes gentlePulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .completion-message {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            z-index: 10;
+        }
+
+        .completion-message h2 {
+            color: #ff85a2;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 0 #ffb6c1;
+        }
+
+        .completion-message p {
+            font-size: 1.3rem;
+            color: #6d8cc0;
+            margin-bottom: 20px;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            font-size: 1.2rem;
+        }
+
+        .moves, .timer {
+            color: #4a6fa5;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background-color: #ffb6c1;
+            opacity: 0;
+            z-index: 999;
+        }
+
+        .watermark {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            font-size: 0.9rem;
+            color: rgba(106, 142, 194, 0.8);
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+
+        .btn {
+            background-color: #a8d8ea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-family: 'Chewy', cursive;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background-color: #8bcae6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .heart {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            animation: floatHeart 3s ease-in-out forwards;
+            font-size: 20px;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(20deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .password-screen, .puzzle-container {
+                padding: 20px;
+            }
+            
+            .password-screen h1, .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .puzzle-board {
+                height: 350px;
+                max-width: 350px;
+            }
+            
+            .header {
+                flex-direction: column;
+            }
+            
+            .snoopy-bg {
+                width: 50px !important;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .puzzle-board {
+                height: 300px;
+                max-width: 300px;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Snoopy floating icons -->
+    <img src="sno1.png" class="snoopy-bg snoopy-1" alt="Snoopy">
+    <img src="sno2.png" class="snoopy-bg snoopy-2" alt="Snoopy">
+    <img src="sno3.png" class="snoopy-bg snoopy-3" alt="Snoopy">
+
+    <!-- Notifications -->
+    <div class="notification" id="passwordNotification">
+        <i class="fas fa-lock-open"></i>
+        <p>This website is just for you, <span id="notificationName">Friend</span>!</p>
+    </div>
+
+    <div class="notification" id="congratsNotification">
+        <i class="fas fa-trophy"></i>
+        <p>Congrats <span id="congratsName">Friend</span>, you made it!</p>
+    </div>
+
+    <!-- Password Screen -->
+    <div class="password-screen" id="passwordScreen">
+        <h1>Special Gift</h1>
+        <p>Enter the password to reveal your surprise!</p>
+        <div class="password-form">
+            <input type="password" class="password-input" id="passwordInput" placeholder="Enter password...">
+            <button class="submit-btn" id="submitPassword">Open Gift</button>
+            <div class="error-message" id="errorMessage">Incorrect password. Please try again.</div>
+        </div>
+    </div>
+
+    <!-- Puzzle Screen -->
+    <div class="puzzle-screen" id="puzzleScreen">
+        <div class="header">
+            <h1>Hey <span id="userName">tes</span>, this website is for you!</h1>
+            <img src="sno4.png" alt="Snoopy">
+        </div>
+        
+        <div class="puzzle-container">
+            <div class="puzzle-board" id="puzzleBoard"></div>
+            <div class="completion-message" id="completionMessage">
+                <h2>You complete the missing piece of my day!</h2>
+                <p>You solved the puzzle in <span id="finalTime">0</span> seconds with <span id="finalMoves">0</span> moves!</p>
+                <button class="btn" id="replayBtn">Play Again</button>
+            </div>
+        </div>
+        
+        <div class="game-info">
+            <div class="moves">Moves: <span id="currentMoves">0</span></div>
+            <div class="timer">Time: <span id="timer">0</span>s</div>
+        </div>
+    </div>
+
+    <!-- Watermark -->
+    <div class="watermark">created by @foocl on telegram</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordScreen = document.getElementById('passwordScreen');
+            const puzzleScreen = document.getElementById('puzzleScreen');
+            const passwordInput = document.getElementById('passwordInput');
+            const submitPassword = document.getElementById('submitPassword');
+            const errorMessage = document.getElementById('errorMessage');
+            const puzzleBoard = document.getElementById('puzzleBoard');
+            const completionMessage = document.getElementById('completionMessage');
+            const userName = document.getElementById('userName');
+            const notificationName = document.getElementById('notificationName');
+            const congratsName = document.getElementById('congratsName');
+            const passwordNotification = document.getElementById('passwordNotification');
+            const congratsNotification = document.getElementById('congratsNotification');
+            const currentMovesDisplay = document.getElementById('currentMoves');
+            const timerDisplay = document.getElementById('timer');
+            const finalTime = document.getElementById('finalTime');
+            const finalMoves = document.getElementById('finalMoves');
+            const replayBtn = document.getElementById('replayBtn');
+            
+            // Game variables
+            let pieces = [];
+            let correctPieces = 0;
+            let moveCount = 0;
+            let seconds = 0;
+            let timerInterval;
+            let isGameActive = false;
+            let pieceWidth, pieceHeight;
+            let boardWidth, boardHeight;
+
+            // Correct password
+            const correctPassword = "carteng";
+            
+            // Handle password submission
+            submitPassword.addEventListener('click', function() {
+                if (passwordInput.value.toLowerCase() === correctPassword) {
+                    // Show notification
+                    notificationName.textContent = "Friend";
+                    passwordNotification.classList.add('show');
+                    
+                    // Hide notification after 3 seconds
+                    setTimeout(() => {
+                        passwordNotification.classList.remove('show');
+                    }, 3000);
+                    
+                    // Transition to puzzle screen
+                    setTimeout(() => {
+                        passwordScreen.style.display = 'none';
+                        puzzleScreen.style.display = 'block';
+                        initPuzzle();
+                        startTimer();
+                    }, 1000);
+                } else {
+                    errorMessage.style.display = 'block';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+            });
+            
+            // Allow Enter key to submit password
+            passwordInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    submitPassword.click();
+                }
+            });
+
+            // Initialize the puzzle
+            function initPuzzle() {
+                // Reset game state
+                puzzleBoard.innerHTML = '';
+                pieces = [];
+                correctPieces = 0;
+                moveCount = 0;
+                currentMovesDisplay.textContent = '0';
+                completionMessage.style.display = 'none';
+                isGameActive = true;
+                
+                // Get board dimensions
+                boardWidth = puzzleBoard.offsetWidth;
+                boardHeight = puzzleBoard.offsetHeight;
+                
+                // Calculate piece dimensions
+                pieceWidth = boardWidth / 3;
+                pieceHeight = boardHeight / 3;
+
+                // Create puzzle pieces
+                createPuzzlePieces();
+                
+                // Shuffle pieces
+                shufflePieces();
+            }
+
+            // Create puzzle pieces from snoopy.jpg
+            function createPuzzlePieces() {
+                const imageUrl = 'assets/user_photo.jpg';
+                
+                for (let row = 0; row < 3; row++) {
+                    for (let col = 0; col < 3; col++) {
+                        const piece = document.createElement('div');
+                        piece.className = 'puzzle-piece';
+                        piece.dataset.row = row;
+                        piece.dataset.col = col;
+                        piece.dataset.correct = false;
+                        
+                        // Position and size
+                        piece.style.width = `${pieceWidth}px`;
+                        piece.style.height = `${pieceHeight}px`;
+                        
+                        // Background image positioning for the sliced piece
+                        const bgPosX = -col * pieceWidth;
+                        const bgPosY = -row * pieceHeight;
+                        piece.style.backgroundImage = `url(${imageUrl})`;
+                        piece.style.backgroundPosition = `${bgPosX}px ${bgPosY}px`;
+                        piece.style.backgroundSize = `${boardWidth}px ${boardHeight}px`;
+                        
+                        // Correct position (for snapping)
+                        piece.dataset.correctX = col * pieceWidth;
+                        piece.dataset.correctY = row * pieceHeight;
+                        
+                        // Add drag events
+                        addDragEvents(piece);
+                        
+                        puzzleBoard.appendChild(piece);
+                        pieces.push(piece);
+                    }
+                }
+            }
+
+            // Shuffle pieces
+            function shufflePieces() {
+                pieces.forEach(piece => {
+                    piece.style.left = `${Math.random() * (boardWidth - pieceWidth)}px`;
+                    piece.style.top = `${Math.random() * (boardHeight - pieceHeight)}px`;
+                    piece.classList.remove('correct');
+                    piece.dataset.correct = 'false';
+                });
+                correctPieces = 0;
+            }
+
+            // Add drag events to a piece
+            function addDragEvents(piece) {
+                let isDragging = false;
+                let offsetX, offsetY;
+                let startX, startY;
+
+                piece.addEventListener('mousedown', startDrag);
+                piece.addEventListener('touchstart', startDrag, { passive: false });
+
+                function startDrag(e) {
+                    if (piece.dataset.correct === 'true' || !isGameActive) return;
+                    
+                    e.preventDefault();
+                    isDragging = true;
+                    piece.classList.add('dragging');
+                    
+                    // Get initial position
+                    const rect = piece.getBoundingClientRect();
+                    
+                    // Calculate offset
+                    if (e.type === 'mousedown') {
+                        offsetX = e.clientX - rect.left;
+                        offsetY = e.clientY - rect.top;
+                    } else {
+                        offsetX = e.touches[0].clientX - rect.left;
+                        offsetY = e.touches[0].clientY - rect.top;
+                    }
+                    
+                    // Save start position
+                    startX = parseFloat(piece.style.left);
+                    startY = parseFloat(piece.style.top);
+                    
+                    // Bring to front
+                    piece.style.zIndex = '100';
+                    
+                    // Add move and end events
+                    document.addEventListener('mousemove', dragPiece);
+                    document.addEventListener('touchmove', dragPiece, { passive: false });
+                    document.addEventListener('mouseup', endDrag);
+                    document.addEventListener('touchend', endDrag);
+                }
+
+                function dragPiece(e) {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    
+                    let clientX, clientY;
+                    
+                    if (e.type === 'mousemove') {
+                        clientX = e.clientX;
+                        clientY = e.clientY;
+                    } else {
+                        clientX = e.touches[0].clientX;
+                        clientY = e.touches[0].clientY;
+                    }
+                    
+                    // Calculate new position
+                    const boardRect = puzzleBoard.getBoundingClientRect();
+                    let newLeft = clientX - boardRect.left - offsetX;
+                    let newTop = clientY - boardRect.top - offsetY;
+                    
+                    // Constrain to board
+                    newLeft = Math.max(0, Math.min(newLeft, boardRect.width - pieceWidth));
+                    newTop = Math.max(0, Math.min(newTop, boardRect.height - pieceHeight));
+                    
+                    piece.style.left = `${newLeft}px`;
+                    piece.style.top = `${newTop}px`;
+                }
+
+                function endDrag(e) {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    piece.classList.remove('dragging');
+                    
+                    // Remove event listeners
+                    document.removeEventListener('mousemove', dragPiece);
+                    document.removeEventListener('touchmove', dragPiece);
+                    document.removeEventListener('mouseup', endDrag);
+                    document.removeEventListener('touchend', endDrag);
+                    
+                    // Check if piece is in correct position
+                    checkCorrectPosition(piece);
+                    
+                    // Reset z-index
+                    piece.style.zIndex = '1';
+                    
+                    // Count the move if position changed
+                    const currentX = parseFloat(piece.style.left);
+                    const currentY = parseFloat(piece.style.top);
+                    if (Math.abs(currentX - startX) > 5 || Math.abs(currentY - startY) > 5) {
+                        moveCount++;
+                        currentMovesDisplay.textContent = moveCount;
+                    }
+                }
+
+                // Touch event handlers
+                piece.addEventListener('touchmove', function(e) {
+                    if (isDragging) e.preventDefault();
+                }, { passive: false });
+            }
+
+            // Check if piece is in correct position
+            function checkCorrectPosition(piece) {
+                if (piece.dataset.correct === 'true') return;
+                
+                const correctX = parseFloat(piece.dataset.correctX);
+                const correctY = parseFloat(piece.dataset.correctY);
+                const currentX = parseFloat(piece.style.left);
+                const currentY = parseFloat(piece.style.top);
+                
+                // Check if close enough to correct position
+                const threshold = 20;
+                if (Math.abs(currentX - correctX) < threshold && 
+                    Math.abs(currentY - correctY) < threshold) {
+                    
+                    // Snap to correct position
+                    piece.style.left = `${correctX}px`;
+                    piece.style.top = `${correctY}px`;
+                    piece.classList.add('correct');
+                    piece.dataset.correct = 'true';
+                    
+                    // Check if puzzle is complete
+                    correctPieces++;
+                    if (correctPieces === 9) {
+                        showCompletion();
+                    }
+                }
+            }
+
+            // Show completion message and animation
+            function showCompletion() {
+                isGameActive = false;
+                clearInterval(timerInterval);
+                
+                completionMessage.style.display = 'flex';
+                finalTime.textContent = seconds;
+                finalMoves.textContent = moveCount;
+                
+                // Show notification
+                congratsName.textContent = "Friend";
+                congratsNotification.classList.add('show');
+                
+                // Create heart animation
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        createHeart();
+                    }, i * 150);
+                }
+                
+                // Create confetti
+                createConfetti();
+            }
+
+            // Create floating heart
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.innerHTML = '💙';
+                heart.className = 'heart';
+                
+                // Random position
+                const left = Math.random() * 100;
+                heart.style.left = `${left}%`;
+                heart.style.bottom = '0';
+                heart.style.fontSize = `${Math.random() * 20 + 15}px`;
+                
+                puzzleBoard.appendChild(heart);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    heart.remove();
+                }, 3000);
+            }
+
+            // Confetti effect
+            function createConfetti() {
+                const colors = ['#ffb6c1', '#a8d8ea', '#c5e3f6', '#ffeb3b', '#4a6fa5'];
+                const container = document.body;
+                
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    container.appendChild(confetti);
+                    
+                    // Animate confetti
+                    const animation = confetti.animate([
+                        { top: '-10px', opacity: 1, transform: `rotate(0deg)` },
+                        { top: '100vh', opacity: 0, transform: `rotate(${Math.random() * 360}deg)` }
+                    ], {
+                        duration: 2000 + Math.random() * 3000,
+                        easing: 'cubic-bezier(0.1, 0.8, 0.2, 1)'
+                    });
+                    
+                    // Remove confetti after animation
+                    animation.onfinish = () => {
+                        confetti.remove();
+                    };
+                }
+            }
+
+            // Timer functionality
+            function startTimer() {
+                seconds = 0;
+                timerDisplay.textContent = seconds;
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    timerDisplay.textContent = seconds;
+                }, 1000);
+            }
+
+            // Replay button
+            replayBtn.addEventListener('click', function() {
+                congratsNotification.classList.remove('show');
+                initPuzzle();
+                startTimer();
+            });
+
+            // Initialize the page
+            passwordInput.focus();
+        });
+    </script>
+</body>
+    </html>
